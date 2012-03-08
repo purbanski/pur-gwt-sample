@@ -134,34 +134,6 @@ public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 					}
 				});
 
-				// try {
-				//
-				// RequestBuilder rb = new RequestBuilder(RequestBuilder.POST,
-				// "http://localhost:8080/RestWeb/stockPrices");
-				//
-				// rb.setCallback(new RequestCallback() {
-				// @Override
-				// public void onResponseReceived(Request request, Response
-				// response) {
-				// System.out.println("onResponseReceived");
-				// System.out.println(response.getStatusCode());
-				// System.out.println(response.getText());
-				// System.out.println(response.getHeadersAsString());
-				// Window.alert("Error onResponseReceived:" +
-				// response.getText());
-				// }
-				//
-				// @Override
-				// public void onError(Request request, Throwable exception) {
-				// Window.alert("Error occurred" + exception.getMessage());
-				// }
-				// });
-				// rb.send();
-				//
-				// } catch (RequestException e) {
-				// Window.alert("Error occurred" + e.getMessage());
-				// }
-
 			}
 		}));
 
