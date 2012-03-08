@@ -1,0 +1,33 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'
+	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default' xmlns:p1="urn:import:com.google.gwt.user.cellview.client">
+
+	<g:HTMLPanel>
+		<g:LayoutPanel width="735px" height="848px">
+			<g:layer left="101px" width="437px" top="22px" height="433px">
+				<g:VerticalPanel ui:field="panel1" borderWidth="2">
+					<g:Label text="Données stoquées" ui:field="labelStock" styleName="gwt-RichTextToolbar"/>
+					<p1:DataGrid width="400px" height="400px" ui:field="dataGrid" title="Les données stoquées dans le Local Storage"/>
+				</g:VerticalPanel>
+			</g:layer>
+			<g:layer left="529px" width="180px" top="25px" height="84px">
+				<g:VerticalPanel spacing="10">
+					<g:Button ui:field="validerButton" text="Insérer storage" width="140px">Valider</g:Button>
+					<g:Button ui:field="asrButton" width="140px">Appel Service REST</g:Button>
+				</g:VerticalPanel>
+			</g:layer>
+			<g:layer left="103px" width="250px" top="475px" height="26px">
+				<g:LayoutPanel width="250px" height="30px">
+					<g:layer top="0px" height="27px">
+						<g:SuggestBox ui:field="sBox"/>
+					</g:layer>
+				</g:LayoutPanel>
+			</g:layer>
+		</g:LayoutPanel>
+		
+	</g:HTMLPanel>
+</ui:UiBinder>
