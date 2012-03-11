@@ -15,7 +15,11 @@ import pur.gwtplatform.samples.views.IMainView;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.cellview.client.DataGrid;
@@ -24,6 +28,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle;
+import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
@@ -89,12 +94,6 @@ public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 	protected void onBind() {
 		super.onBind();
 
-		SuggestBox box = getView().getsBox();
-		oracle = (MultiWordSuggestOracle) getView().getsBox().getSuggestOracle();
-		oracle.add("Cat");
-		oracle.add("Dog");
-		oracle.add("Horse");
-		oracle.add("Canary");
 		dataGrid = getView().getDataGrid();
 		dataGrid.addColumn(idColumn, "ID");
 		dataGrid.addColumn(valueColumn, "Value");
@@ -112,21 +111,20 @@ public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 
 		registerHandler(eventBus.addHandler(InsertCompleteEvent.TYPE, new InsertCompleteHandler() {
 			public void onInsertComplete(InsertCompleteEvent event) {
-				// refresh datagrid
-				liste.add(new Data(event.getData().getId(), event.getData().getValue()));
-				dataGrid.setRowData(liste);
+				refreshDataGrid();
 			}
 		}));
 
 		registerHandler(getView().getAsrButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-
-				Resource resource = new Resource("http://localhost:8080/RestWeb/jsonWS");
+				Resource resource = new Resource("http://localhost/RestWeb/jsonWS");
 				resource.post().send(new JsonCallback() {
-					public void onSuccess(Method method, JSONValue response) {
-						System.out.println(response);
+					public void onSuccess(Method method, JSONValue response) {						
 						Window.alert(" ! onSuccess:" + response);
+						JSONObject productsObj = response.isObject();
+//						JSONArray productsArray = productsObj.get("keys").isArray();
+ 					    Window.alert(" ! productsArray:" + productsObj);
 					}
 
 					public void onFailure(Method method, Throwable exception) {
@@ -137,22 +135,41 @@ public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 			}
 		}));
 
+		registerHandler(getView().getsBox().addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
+
+			@Override
+			public void onSelection(SelectionEvent<Suggestion> event) {
+				String value = event.getSelectedItem().getReplacementString();
+				Storage stockstore = Storage.getLocalStorageIfSupported();
+				if (stockstore != null) {
+					stockstore.removeItem(value);
+					refreshDataGrid();
+				}
+			}
+		}));
+
 	}
 
 	private void refreshDataGrid() {
+		SuggestBox box = getView().getsBox();
+		oracle = (MultiWordSuggestOracle) getView().getsBox().getSuggestOracle();
 		stockstore = Storage.getLocalStorageIfSupported();
 		if (stockstore != null) {
 			liste.clear();
+			oracle.clear();
 			for (int i = 0; i < stockstore.getLength(); i++) {
 				String key = stockstore.key(i);
 				String value = stockstore.getItem(key);
 				liste.add(new Data(key, value));
+				oracle.add(key);
 			}
 			dataGrid.setRowData(liste);
 			// getView().getSimplePagerGrid().setDisplay(dataGrid);
 			getView().getPanel1().setVisible(true);
 
 		}
+		int hauteur = 35 + (25 * liste.size());
+		dataGrid.setSize("400px", String.valueOf(hauteur) + "px");
 	}
 
 }

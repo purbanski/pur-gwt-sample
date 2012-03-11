@@ -339,7 +339,7 @@
 						<buildcommand>com.google.gwt.eclipse.core.gwtProjectValidator</buildcommand>
 					</additionalBuildcommands>
 					<additionalProjectnatures>
-						<projectnature>com.google.appengine.eclipse.core.gaeNature</projectnature>
+						<!-- projectnature>com.google.appengine.eclipse.core.gaeNature</projectnature-->
 						<projectnature>com.google.gwt.eclipse.core.gwtNature</projectnature>
 					</additionalProjectnatures>
 				</configuration>

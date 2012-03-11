@@ -9,7 +9,7 @@
 				<g:layer left="153px" width="500px" top="29px" height="196px">
 					<g:VerticalPanel width="500px" horizontalAlignment="ALIGN_CENTER" borderWidth="2">
 						<g:HorizontalPanel horizontalAlignment="ALIGN_CENTER" width="460px" styleName="gwt-StackPanel">
-							<g:Label text="Saisir des données dans le LocalStorage" horizontalAlignment="ALIGN_CENTER" width="460"/>
+							<g:Label text="Saisir des données dans le LocalStorage" horizontalAlignment="ALIGN_CENTER" width="487px" styleName="gwt-RichTextToolbar"/>
 						</g:HorizontalPanel>
 						<g:HorizontalPanel spacing="3" width="460px">
 							<g:Label text="Clé de stockage" horizontalAlignment="ALIGN_RIGHT" width="110px" />

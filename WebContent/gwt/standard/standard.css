@@ -704,10 +704,14 @@ a, a:visited, a:hover {
 }
 
 .gwt-SuggestBox {
-  padding: 2px;
 }
 .gwt-SuggestBoxPopup {
   margin-left: 3px;
+  	color: purple;
+	padding: 2px;
+	font-size: 12px;
+	font-style: normal;
+	font-family: Arial;
 }
 .gwt-SuggestBoxPopup .item {
   padding: 2px 6px;
