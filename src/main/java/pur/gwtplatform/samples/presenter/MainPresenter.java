@@ -20,6 +20,7 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.cellview.client.DataGrid;
@@ -120,11 +121,18 @@ public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 			public void onClick(ClickEvent event) {
 				Resource resource = new Resource("http://localhost/RestWeb/jsonWS");
 				resource.post().send(new JsonCallback() {
-					public void onSuccess(Method method, JSONValue response) {						
-						Window.alert(" ! onSuccess:" + response);
-						JSONObject productsObj = response.isObject();
-//						JSONArray productsArray = productsObj.get("keys").isArray();
- 					    Window.alert(" ! productsArray:" + productsObj);
+					public void onSuccess(Method method, JSONValue response) {				
+						JSONArray array = response.isObject().get("keys").isArray();
+						for (int i = 0; i < array.size(); i++) {
+							JSONObject jsObject = array.get(i).isObject();
+							String key = jsObject.get("key").isString().stringValue();
+							String value = jsObject.get("value").isString().stringValue();
+							Storage stockstore = Storage.getLocalStorageIfSupported();
+							if (stockstore != null) {
+								stockstore.setItem(key, value);
+							}
+						}
+						refreshDataGrid();						
 					}
 
 					public void onFailure(Method method, Throwable exception) {
