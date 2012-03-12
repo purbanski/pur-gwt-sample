@@ -205,7 +205,39 @@
 		<outputDirectory>${basedir}/target/${project.name}/WEB-INF/classes
                 </outputDirectory>
 		<plugins>
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<warSourceDirectory>WebContent</warSourceDirectory>
+					<webappDirectory>${project.build.directory}/webapp</webappDirectory>
+					<webXml>WebContent/WEB-INF/web.xml</webXml>
+					<warSourceExcludes>WEB-INF/lib/*.jar</warSourceExcludes>
+					<webResources>
+						<resource>
+							<!-- this is relative to the pom.xml directory -->
+							<directory>${basedir}/paramDev</directory>
+							<targetPath>WEB-INF/classes</targetPath>
+						</resource>
+						<resource>
+							<!-- this is relative to the pom.xml directory -->
+							<directory>${basedir}/src/main/java</directory>
+							<includes>
+								<include>**/*.properties</include>
+								<include>**/*.xml</include>
+							</includes>
+							<targetPath>WEB-INF/classes</targetPath>
+						</resource>
+					</webResources>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
@@ -339,7 +371,7 @@
 						<buildcommand>com.google.gwt.eclipse.core.gwtProjectValidator</buildcommand>
 					</additionalBuildcommands>
 					<additionalProjectnatures>
-						<!-- projectnature>com.google.appengine.eclipse.core.gaeNature</projectnature-->
+						<!-- projectnature>com.google.appengine.eclipse.core.gaeNature</projectnature -->
 						<projectnature>com.google.gwt.eclipse.core.gwtNature</projectnature>
 					</additionalProjectnatures>
 				</configuration>
