@@ -10,8 +10,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
 
 public class MainView extends ViewImpl implements IMainView {
 
