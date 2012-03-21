@@ -119,8 +119,8 @@ public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 		registerHandler(getView().getAsrButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				Resource resource = new Resource("http://localhost/RestWeb/jsonWS");
-				resource.post().send(new JsonCallback() {
+				Resource resource = new Resource("/pur/data/mp/get");
+				resource.get().send(new JsonCallback() {
 					public void onSuccess(Method method, JSONValue response) {				
 						JSONArray array = response.isObject().get("keys").isArray();
 						for (int i = 0; i < array.size(); i++) {
