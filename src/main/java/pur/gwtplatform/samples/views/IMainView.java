@@ -18,10 +18,6 @@ public interface IMainView extends View {
 
 	Button getAsrButton();
 
-	SuggestBox getsBox();
-
-	void setsBox(SuggestBox sBox);
-
 	Button getOpsButton();
 
 	Button getOpdButton();

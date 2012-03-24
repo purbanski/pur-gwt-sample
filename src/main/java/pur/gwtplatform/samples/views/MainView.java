@@ -39,8 +39,6 @@ public class MainView extends ViewImpl implements IMainView {
 	@UiField
 	Button asrButton;
 	@UiField
-	SuggestBox sBox;
-	@UiField
 	Button opsButton;
 	@UiField
 	Button opdButton;
@@ -64,18 +62,6 @@ public class MainView extends ViewImpl implements IMainView {
 	public Button getAsrButton() {
 		return asrButton;
 	}
-
-	public SuggestBox getsBox() {
-		return sBox;
-	}
-
-	public void setsBox(SuggestBox sBox) {
-		this.sBox = sBox;
-	}
-
-	// @UiHandler("opsButton")
-	// void onOpsButtonClick(ClickEvent event) {
-	// }
 
 	public Button getOpsButton() {
 		return opsButton;

@@ -15,8 +15,6 @@ import pur.gwtplatform.samples.views.IMainView;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -25,10 +23,6 @@ import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
-import com.google.gwt.user.client.ui.SuggestBox;
-import com.google.gwt.user.client.ui.SuggestOracle;
-import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
@@ -44,7 +38,6 @@ import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 import com.gwtplatform.mvp.client.proxy.RevealRootPopupContentEvent;
 
 public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
-	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
 	private EventBus eventBus;
 	private final PlaceManager placeManager;
 	private Storage stockstore = null;
@@ -104,7 +97,6 @@ public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 		enregistrerBoutonValider();
 		gererEvenements();
 		enregistrerBoutonASR();
-		gererAutoCompleteBox();
 		enregistrerBoutonOuvPopupSaisie();
 		enregistrerBoutonOuvPopupSupp();
 
@@ -113,35 +105,20 @@ public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 	private void enregistrerBoutonOuvPopupSaisie() {
 		registerHandler(getView().getOpsButton().addClickHandler(new ClickHandler() {
 			@Override
-			public void onClick(ClickEvent event) {				
+			public void onClick(ClickEvent event) {
 				openPopup();
 			}
 
 		}));
 	}
-	
+
 	private void enregistrerBoutonOuvPopupSupp() {
 		registerHandler(getView().getOpdButton().addClickHandler(new ClickHandler() {
 			@Override
-			public void onClick(ClickEvent event) {				
+			public void onClick(ClickEvent event) {
 				openPopupSupp();
 			}
 
-		}));
-	}
-
-	private void gererAutoCompleteBox() {
-		registerHandler(getView().getsBox().addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
-
-			@Override
-			public void onSelection(SelectionEvent<Suggestion> event) {
-				String value = event.getSelectedItem().getReplacementString();
-				Storage stockstore = Storage.getLocalStorageIfSupported();
-				if (stockstore != null) {
-					stockstore.removeItem(value);
-					refreshDataGrid();
-				}
-			}
 		}));
 	}
 
@@ -163,7 +140,7 @@ public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 								stockstore.setItem(key, value);
 							}
 						}
-						refreshDataGrid();
+						eventBus.fireEvent(new UpdateLocalStorageEvent());
 					}
 
 					public void onFailure(Method method, Throwable exception) {
@@ -204,25 +181,21 @@ public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 	}
 
 	private void openPopup() {
-		RevealRootPopupContentEvent.fire(this, dialogPresenter);		
+		RevealRootPopupContentEvent.fire(this, dialogPresenter);
 	}
-	
+
 	private void openPopupSupp() {
-		RevealRootPopupContentEvent.fire(this, deleteDialogPresenter);		
+		RevealRootPopupContentEvent.fire(this, deleteDialogPresenter);
 	}
-	
+
 	private void refreshDataGrid() {
-		SuggestBox box = getView().getsBox();
-		oracle = (MultiWordSuggestOracle) getView().getsBox().getSuggestOracle();
 		stockstore = Storage.getLocalStorageIfSupported();
 		if (stockstore != null) {
 			liste.clear();
-			oracle.clear();
 			for (int i = 0; i < stockstore.getLength(); i++) {
 				String key = stockstore.key(i);
 				String value = stockstore.getItem(key);
 				liste.add(new Data(key, value));
-				oracle.add(key);
 			}
 			dataGrid.setRowData(liste);
 			// getView().getSimplePagerGrid().setDisplay(dataGrid);
