@@ -20,7 +20,6 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.cellview.client.DataGrid;
@@ -42,6 +41,7 @@ import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
+import com.gwtplatform.mvp.client.proxy.RevealRootPopupContentEvent;
 
 public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
@@ -50,11 +50,13 @@ public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 	private Storage stockstore = null;
 	private List<Data> liste = new ArrayList<Data>(10);
 	private DataGrid dataGrid = null;
+	private DialogPresenter dialogPresenter;
+
 	private TextColumn<Data> idColumn = new TextColumn<Data>() {
 
 		@Override
 		public String getValue(Data data) {
-			return data.getId();
+			return data.getKey();
 		}
 	};
 
@@ -74,10 +76,11 @@ public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 
 	@Inject
 	public MainPresenter(EventBus eventBus, IMainView view, MyProxy proxy, PlaceManager placeManager,
-			DispatchAsync dispatcher) {
+			DispatchAsync dispatcher, DialogPresenter dialogPresenter) {
 		super(eventBus, view, proxy);
 		this.eventBus = eventBus;
 		this.placeManager = placeManager;
+		this.dialogPresenter = dialogPresenter;
 	}
 
 	@Override
@@ -94,55 +97,27 @@ public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 	@Override
 	protected void onBind() {
 		super.onBind();
-
-		dataGrid = getView().getDataGrid();
-		dataGrid.addColumn(idColumn, "ID");
-		dataGrid.addColumn(valueColumn, "Value");
-		dataGrid.setRowData(liste);
-		dataGrid.setColumnWidth(idColumn, "100px");
-		dataGrid.setColumnWidth(valueColumn, "300px");
+		initDataGrid();
 		refreshDataGrid();
+		enregistrerBoutonValider();
+		gererEvenements();
+		enregistrerBoutonASR();
+		gererAutoCompleteBox();
+		enregistrerBoutonOuvPopup();
 
-		registerHandler(getView().getValiderButton().addClickHandler(new ClickHandler() {
+	}
+
+	private void enregistrerBoutonOuvPopup() {
+		registerHandler(getView().getOpsButton().addClickHandler(new ClickHandler() {
 			@Override
-			public void onClick(ClickEvent event) {
-				placeManager.revealPlace(new PlaceRequest(NameTokens.msg));
+			public void onClick(ClickEvent event) {				
+				openPopup();
 			}
+
 		}));
+	}
 
-		registerHandler(eventBus.addHandler(InsertCompleteEvent.TYPE, new InsertCompleteHandler() {
-			public void onInsertComplete(InsertCompleteEvent event) {
-				refreshDataGrid();
-			}
-		}));
-
-		registerHandler(getView().getAsrButton().addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				Resource resource = new Resource("/pur/data/mp/get");
-				resource.get().send(new JsonCallback() {
-					public void onSuccess(Method method, JSONValue response) {				
-						JSONArray array = response.isObject().get("keys").isArray();
-						for (int i = 0; i < array.size(); i++) {
-							JSONObject jsObject = array.get(i).isObject();
-							String key = jsObject.get("key").isString().stringValue();
-							String value = jsObject.get("value").isString().stringValue();
-							Storage stockstore = Storage.getLocalStorageIfSupported();
-							if (stockstore != null) {
-								stockstore.setItem(key, value);
-							}
-						}
-						refreshDataGrid();						
-					}
-
-					public void onFailure(Method method, Throwable exception) {
-						Window.alert("onFailure: " + exception);
-					}
-				});
-
-			}
-		}));
-
+	private void gererAutoCompleteBox() {
 		registerHandler(getView().getsBox().addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
 
 			@Override
@@ -155,9 +130,70 @@ public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 				}
 			}
 		}));
-
 	}
 
+	private void enregistrerBoutonASR() {
+		registerHandler(getView().getAsrButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Resource resource = new Resource("/pur/data/mp/get");
+				resource.get().send(new JsonCallback() {
+					public void onSuccess(Method method, JSONValue response) {
+						JSONObject keys = response.isObject().get("keys").isObject();
+						JSONArray array = keys.get("keys").isArray();
+						for (int i = 0; i < array.size(); i++) {
+							JSONObject jsObject = array.get(i).isObject();
+							String value = jsObject.get("value").isString().stringValue();
+							String key = jsObject.get("key").isString().stringValue();
+							Storage stockstore = Storage.getLocalStorageIfSupported();
+							if (stockstore != null) {
+								stockstore.setItem(key, value);
+							}
+						}
+						refreshDataGrid();
+					}
+
+					public void onFailure(Method method, Throwable exception) {
+						Window.alert("onFailure: " + exception);
+					}
+				});
+
+			}
+		}));
+	}
+
+	private void gererEvenements() {
+		registerHandler(eventBus.addHandler(InsertCompleteEvent.TYPE, new InsertCompleteHandler() {
+			public void onInsertComplete(InsertCompleteEvent event) {
+				refreshDataGrid();
+			}
+		}));
+	}
+
+	private void enregistrerBoutonValider() {
+		registerHandler(getView().getValiderButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				placeManager.revealPlace(new PlaceRequest(NameTokens.msg));
+			}
+		}));
+	}
+
+	private void initDataGrid() {
+		idColumn.setSortable(true);
+
+		dataGrid = getView().getDataGrid();
+		dataGrid.addColumn(idColumn, "ID");
+		dataGrid.addColumn(valueColumn, "Value");
+		dataGrid.setRowData(liste);
+		dataGrid.setColumnWidth(idColumn, "100px");
+		dataGrid.setColumnWidth(valueColumn, "300px");
+	}
+
+	private void openPopup() {
+		RevealRootPopupContentEvent.fire(this, dialogPresenter);
+		
+	}
 	private void refreshDataGrid() {
 		SuggestBox box = getView().getsBox();
 		oracle = (MultiWordSuggestOracle) getView().getsBox().getSuggestOracle();

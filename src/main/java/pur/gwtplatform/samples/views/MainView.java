@@ -10,6 +10,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
 
 public class MainView extends ViewImpl implements IMainView {
 
@@ -40,6 +42,7 @@ public class MainView extends ViewImpl implements IMainView {
 	Button asrButton;
 	@UiField
 	SuggestBox sBox;
+	@UiField Button opsButton;
 
 	public Button getValiderButton() {
 		return validerButton;
@@ -69,4 +72,12 @@ public class MainView extends ViewImpl implements IMainView {
 		this.sBox = sBox;
 	}
 
+	@UiHandler("opsButton")
+	void onOpsButtonClick(ClickEvent event) {
+	}
+
+	public Button getOpsButton() {
+		return opsButton;
+	}
+	
 }

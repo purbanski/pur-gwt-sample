@@ -21,5 +21,7 @@ public interface IMainView extends View {
 	SuggestBox getsBox();
 
 	void setsBox(SuggestBox sBox);
+	
+	Button getOpsButton();
 
 }

@@ -16,12 +16,15 @@
 
 package pur.gwtplatform.samples.modules;
 
+import pur.gwtplatform.samples.presenter.DialogPresenter;
+import pur.gwtplatform.samples.presenter.InsertPresenter;
 import pur.gwtplatform.samples.presenter.MainPresenter;
-import pur.gwtplatform.samples.presenter.MessageInsertPresenter;
+import pur.gwtplatform.samples.views.DialogView;
+import pur.gwtplatform.samples.views.IDialogView;
 import pur.gwtplatform.samples.views.IMainView;
-import pur.gwtplatform.samples.views.IMessageInsertView;
+import pur.gwtplatform.samples.views.IInsertView;
+import pur.gwtplatform.samples.views.InsertView;
 import pur.gwtplatform.samples.views.MainView;
-import pur.gwtplatform.samples.views.MessageInsertView;
 
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
@@ -36,7 +39,9 @@ public class Module extends AbstractPresenterModule {
 		// Presenters
 		bindPresenter(MainPresenter.class, IMainView.class, MainView.class, MainPresenter.MyProxy.class);
 
-		bindPresenter(MessageInsertPresenter.class, IMessageInsertView.class, MessageInsertView.class,
-				MessageInsertPresenter.MyProxy.class);
-	}
+		bindPresenter(InsertPresenter.class, IInsertView.class, InsertView.class,
+				InsertPresenter.MyProxy.class);
+		//bind de la popup
+		bindSingletonPresenterWidget(DialogPresenter.class, IDialogView.class, DialogView.class);
+}
 }

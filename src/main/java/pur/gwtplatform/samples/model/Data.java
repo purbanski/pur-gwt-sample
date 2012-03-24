@@ -2,13 +2,13 @@ package pur.gwtplatform.samples.model;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "Data")
+@XmlRootElement(name = "key")
 public class Data {
 
-	private String id;
+	private String key;
 	private String value;
 	public Data(String id, String value) {
-		this.id = id;
+		this.key = id;
 		this.value = value;
 	}
 
@@ -16,12 +16,12 @@ public class Data {
 		super();
 	}
 
-	public String getId() {
-		return id;
+	public String getKey() {
+		return key;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setKey(String key) {
+		this.key = key;
 	}
 
 	public String getValue() {
@@ -32,4 +32,5 @@ public class Data {
 		this.value = value;
 	}
 
+	
 }

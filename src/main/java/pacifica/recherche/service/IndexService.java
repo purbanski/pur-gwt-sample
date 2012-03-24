@@ -1,5 +1,8 @@
 package pacifica.recherche.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -10,22 +13,25 @@ import pur.gwtplatform.samples.model.Data;
 @Path("/mp/")
 public class IndexService {
 
-
 	@GET
 	@Produces("application/xml")
 	@Path("search/{query}")
 	public Data search(@PathParam("query") String query) {
 
-		
 		return new Data("id", "value");
 	}
 
 	@GET
-	@Produces("application/json")	
+	@Produces("application/json")
 	@Path("get")
-	public Data get() {
-
-		
-		return new Data("id", "value");
+	public ListeData  get() {
+		ListeData ld = new ListeData();
+		List<Data> liste = new ArrayList<Data>();
+		for (int i = 0; i < 10; i++) {
+			Data data = new Data("test" + String.valueOf(i), "toto"+String.valueOf(i));
+			liste.add(data);
+		}
+		ld.setKeys(liste);
+		return ld;
 	}
 }

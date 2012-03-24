@@ -16,8 +16,9 @@
 
 package pur.gwtplatform.samples.modules;
 
+import pur.gwtplatform.samples.presenter.DialogPresenter;
 import pur.gwtplatform.samples.presenter.MainPresenter;
-import pur.gwtplatform.samples.presenter.MessageInsertPresenter;
+import pur.gwtplatform.samples.presenter.InsertPresenter;
 
 import com.google.gwt.inject.client.AsyncProvider;
 import com.google.gwt.inject.client.GinModules;
@@ -34,5 +35,7 @@ public interface IGinjector extends Ginjector {
 
 	AsyncProvider<MainPresenter> getMainPresenter();
 
-	AsyncProvider<MessageInsertPresenter> getMessageInsertPresenter();
+	AsyncProvider<InsertPresenter> getMessageInsertPresenter();
+
+	AsyncProvider<DialogPresenter> getDialogPresenter();
 }
