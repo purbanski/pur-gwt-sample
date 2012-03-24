@@ -1,6 +1,6 @@
 package pur.gwtplatform.samples.presenter;
 
-import pur.gwtplatform.samples.events.InsertCompleteEvent;
+import pur.gwtplatform.samples.events.UpdateLocalStorageEvent;
 import pur.gwtplatform.samples.model.Data;
 import pur.gwtplatform.samples.modules.NameTokens;
 import pur.gwtplatform.samples.views.IInsertView;
@@ -56,7 +56,7 @@ public class InsertPresenter extends Presenter<IInsertView, InsertPresenter.MyPr
 					stockstore.setItem(key, data);
 				}
 
-				eventBus.fireEvent(new InsertCompleteEvent(new Data(key, data)));
+				eventBus.fireEvent(new UpdateLocalStorageEvent(new Data(key, data)));
 				// on retourne sur le main
 				placeManager.revealPlace(new PlaceRequest(NameTokens.main));
 			}

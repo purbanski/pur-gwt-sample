@@ -7,8 +7,8 @@ import org.fusesource.restygwt.client.JsonCallback;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.Resource;
 
-import pur.gwtplatform.samples.events.InsertCompleteEvent;
-import pur.gwtplatform.samples.events.InsertCompleteEvent.InsertCompleteHandler;
+import pur.gwtplatform.samples.events.UpdateLocalStorageEvent;
+import pur.gwtplatform.samples.events.UpdateLocalStorageEvent.InsertCompleteHandler;
 import pur.gwtplatform.samples.model.Data;
 import pur.gwtplatform.samples.modules.NameTokens;
 import pur.gwtplatform.samples.views.IMainView;
@@ -51,6 +51,7 @@ public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 	private List<Data> liste = new ArrayList<Data>(10);
 	private DataGrid dataGrid = null;
 	private DialogPresenter dialogPresenter;
+	private DeleteDialogPresenter deleteDialogPresenter;
 
 	private TextColumn<Data> idColumn = new TextColumn<Data>() {
 
@@ -76,11 +77,12 @@ public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 
 	@Inject
 	public MainPresenter(EventBus eventBus, IMainView view, MyProxy proxy, PlaceManager placeManager,
-			DispatchAsync dispatcher, DialogPresenter dialogPresenter) {
+			DispatchAsync dispatcher, DialogPresenter dialogPresenter, DeleteDialogPresenter deleteDialogPresenter) {
 		super(eventBus, view, proxy);
 		this.eventBus = eventBus;
 		this.placeManager = placeManager;
 		this.dialogPresenter = dialogPresenter;
+		this.deleteDialogPresenter = deleteDialogPresenter;
 	}
 
 	@Override
@@ -103,15 +105,26 @@ public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 		gererEvenements();
 		enregistrerBoutonASR();
 		gererAutoCompleteBox();
-		enregistrerBoutonOuvPopup();
+		enregistrerBoutonOuvPopupSaisie();
+		enregistrerBoutonOuvPopupSupp();
 
 	}
 
-	private void enregistrerBoutonOuvPopup() {
+	private void enregistrerBoutonOuvPopupSaisie() {
 		registerHandler(getView().getOpsButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {				
 				openPopup();
+			}
+
+		}));
+	}
+	
+	private void enregistrerBoutonOuvPopupSupp() {
+		registerHandler(getView().getOpdButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {				
+				openPopupSupp();
 			}
 
 		}));
@@ -163,8 +176,8 @@ public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 	}
 
 	private void gererEvenements() {
-		registerHandler(eventBus.addHandler(InsertCompleteEvent.TYPE, new InsertCompleteHandler() {
-			public void onInsertComplete(InsertCompleteEvent event) {
+		registerHandler(eventBus.addHandler(UpdateLocalStorageEvent.TYPE, new InsertCompleteHandler() {
+			public void onInsertComplete(UpdateLocalStorageEvent event) {
 				refreshDataGrid();
 			}
 		}));
@@ -191,9 +204,13 @@ public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 	}
 
 	private void openPopup() {
-		RevealRootPopupContentEvent.fire(this, dialogPresenter);
-		
+		RevealRootPopupContentEvent.fire(this, dialogPresenter);		
 	}
+	
+	private void openPopupSupp() {
+		RevealRootPopupContentEvent.fire(this, deleteDialogPresenter);		
+	}
+	
 	private void refreshDataGrid() {
 		SuggestBox box = getView().getsBox();
 		oracle = (MultiWordSuggestOracle) getView().getsBox().getSuggestOracle();

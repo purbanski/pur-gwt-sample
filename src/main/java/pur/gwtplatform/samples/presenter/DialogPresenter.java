@@ -1,6 +1,6 @@
 package pur.gwtplatform.samples.presenter;
 
-import pur.gwtplatform.samples.events.InsertCompleteEvent;
+import pur.gwtplatform.samples.events.UpdateLocalStorageEvent;
 import pur.gwtplatform.samples.model.Data;
 import pur.gwtplatform.samples.views.IDialogView;
 
@@ -40,7 +40,7 @@ public class DialogPresenter extends PresenterWidget<IDialogView> implements Nav
 					stockstore.setItem(key, data);
 				}
 
-				eventBus.fireEvent(new InsertCompleteEvent(new Data(key, data)));				
+				eventBus.fireEvent(new UpdateLocalStorageEvent(new Data(key, data)));				
 			}
 		}));
 	}

@@ -18,6 +18,7 @@
 				<g:VerticalPanel spacing="10">
 					<g:Button ui:field="validerButton" text="Insérer storage" width="140px">Valider</g:Button>
 					<g:Button text="Ouvrir popup de saisie" ui:field="opsButton"/>
+					<g:Button text="Ouvrir popup de suppression" ui:field="opdButton"/>
 					<g:Button ui:field="asrButton" width="140px">Appel Service REST</g:Button>
 					<g:HorizontalPanel width="323px" verticalAlignment="ALIGN_MIDDLE">
 						<g:Label text="Clé à supprimer:" horizontalAlignment="ALIGN_RIGHT" styleName="gwt-RichTextToolbar"/>

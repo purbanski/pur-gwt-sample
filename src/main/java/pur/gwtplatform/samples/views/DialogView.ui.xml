@@ -2,9 +2,9 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
     xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
-    <g:DialogBox modal="true" width="500px" height="245px" text="Saisir des données dans le localStorage">
+    <g:DialogBox modal="true" width="500px" height="245px">
         <g:caption>
-            <b>Global dialog box example</b>
+            <b>Saisir des données dans le localStorage</b>
         </g:caption>
         <g:HTMLPanel width="460px" height="199px">
 			<g:LayoutPanel width="460px" height="180px">
