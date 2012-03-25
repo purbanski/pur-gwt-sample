@@ -41,11 +41,10 @@ public class Module extends AbstractPresenterModule {
 
 		// Presenters
 		bindPresenter(MainPresenter.class, IMainView.class, MainView.class, MainPresenter.MyProxy.class);
-
 		bindPresenter(InsertPresenter.class, IInsertView.class, InsertView.class, InsertPresenter.MyProxy.class);
-		// bind de la popup
+		// bind des popups
 		bindSingletonPresenterWidget(DialogPresenter.class, IDialogView.class, DialogView.class);
-
 		bindSingletonPresenterWidget(DeleteDialogPresenter.class, IDeleteDialogView.class, DeleteDialogView.class);
+		
 	}
 }

@@ -1,4 +1,4 @@
-package pacifica.recherche.service;
+package pur.gwtplatform.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import javax.ws.rs.Produces;
 import pur.gwtplatform.samples.model.Data;
 
 @Path("/mp/")
-public class IndexService {
+public class DataRest {
 
 	@GET
 	@Produces("application/xml")

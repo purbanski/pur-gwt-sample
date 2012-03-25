@@ -1,4 +1,4 @@
-package pacifica.recherche.service;
+package pur.gwtplatform.service;
 
 import java.util.List;
 
