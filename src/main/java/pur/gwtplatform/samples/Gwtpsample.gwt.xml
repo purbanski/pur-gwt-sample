@@ -35,6 +35,7 @@
 	<source path='views' />
 	<source path='model' />
 	<source path='events' />
+	<source path='services' />
 
 	<define-configuration-property name="gin.ginjector"
 		is-multi-valued="false" />

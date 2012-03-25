@@ -18,7 +18,7 @@
 				<g:VerticalPanel spacing="10" borderWidth="2">
 					<g:Button text="Ouvrir popup de saisie" ui:field="opsButton" width="190px"/>
 					<g:Button text="Ouvrir popup de suppression" ui:field="opdButton" width="190px"/>
-					<g:Button ui:field="asrButton" width="190px" text="Appel du service REST"></g:Button>
+					<g:Button ui:field="asrButton" width="190px" text="Appeler Service REST"></g:Button>
 					<g:Button ui:field="validerButton" text="Ouvrir Page de saisie" width="190px"></g:Button>
 				</g:VerticalPanel>
 			</g:layer>

@@ -11,6 +11,7 @@ import pur.gwtplatform.samples.events.UpdateLocalStorageEvent;
 import pur.gwtplatform.samples.events.UpdateLocalStorageEvent.InsertCompleteHandler;
 import pur.gwtplatform.samples.model.Data;
 import pur.gwtplatform.samples.modules.NameTokens;
+import pur.gwtplatform.samples.services.DataService;
 import pur.gwtplatform.samples.views.IMainView;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -45,6 +46,8 @@ public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 	private DataGrid dataGrid = null;
 	private DialogPresenter dialogPresenter;
 	private DeleteDialogPresenter deleteDialogPresenter;
+	@Inject
+	private DataService dataService;
 
 	private TextColumn<Data> idColumn = new TextColumn<Data>() {
 
@@ -126,28 +129,36 @@ public class MainPresenter extends Presenter<IMainView, MainPresenter.MyProxy> {
 		registerHandler(getView().getAsrButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				Resource resource = new Resource("/pur/data/mp/get");
-				resource.get().send(new JsonCallback() {
-					public void onSuccess(Method method, JSONValue response) {
-						JSONObject keys = response.isObject().get("keys").isObject();
-						JSONArray array = keys.get("keys").isArray();
-						for (int i = 0; i < array.size(); i++) {
-							JSONObject jsObject = array.get(i).isObject();
-							String value = jsObject.get("value").isString().stringValue();
-							String key = jsObject.get("key").isString().stringValue();
-							Storage stockstore = Storage.getLocalStorageIfSupported();
-							if (stockstore != null) {
-								stockstore.setItem(key, value);
-							}
-						}
-						eventBus.fireEvent(new UpdateLocalStorageEvent());
+				if (stockstore != null) {
+					List<Data> array = dataService.getData();
+					for (Data data : array) {
+						stockstore.setItem(data.getKey(), data.getValue());
 					}
-
-					public void onFailure(Method method, Throwable exception) {
-						Window.alert("onFailure: " + exception);
-					}
-				});
-
+				}
+				eventBus.fireEvent(new UpdateLocalStorageEvent());
+				// Resource resource = new Resource("/pur/data/mp/get");
+				// resource.get().send(new JsonCallback() {
+				// public void onSuccess(Method method, JSONValue response) {
+				// JSONObject keys = response.isObject().get("keys").isObject();
+				// JSONArray array = keys.get("keys").isArray();
+				// for (int i = 0; i < array.size(); i++) {
+				// JSONObject jsObject = array.get(i).isObject();
+				// String value =
+				// jsObject.get("value").isString().stringValue();
+				// String key = jsObject.get("key").isString().stringValue();
+				// Storage stockstore = Storage.getLocalStorageIfSupported();
+				// if (stockstore != null) {
+				// stockstore.setItem(key, value);
+				// }
+				// }
+				// eventBus.fireEvent(new UpdateLocalStorageEvent());
+				// }
+				//
+				// public void onFailure(Method method, Throwable exception) {
+				// Window.alert("onFailure: " + exception);
+				// }
+				// });
+				
 			}
 		}));
 	}
